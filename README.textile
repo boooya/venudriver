@@ -1,0 +1,521 @@
+h1. Venue Driver API Documentation
+
+h2. REST API
+
+Venue Driver provides a simple HTTP API that's built according to a REST design pattern.  That just means that each of our resources like "Events" has a URL that you can call, and each resource has 'index', 'create', 'read', 'update' and 'delete' actions.  You tell it whether you want your data in XML or JSON.  In some cases we also provide HTML representations so that you don't even have to process raw data.
+
+h3. Resources
+
+Venue Driver provides easy XML or JSON access to Reservation and Guest (for Guestlist) resources:
+
+* Venues
+* Venues/Events
+* Venues/Events/Flyers
+* Reservations
+* Guests
+* Contacts
+
+h2. Common tasks
+
+h3. Get a venue list for an account
+
+If you're only dealing with one venue then you don't need to use the API to obtain a venue list.  You
+can simply obtain your venue's ID from Venue Driver support staff, and then use other API methods for
+accessing lists of events for a venue, flyers for an event, etc.
+
+If you need to obtain a list of venues for an account, then you will need the account ID, which you can obtain from Venue Driver support.  Then use that account ID to request a list of venues for that account:
+
+<pre>
+<code>
+curl 'http://venuedriver.com/api/accounts/1234/venues.xml?username=venuesite&password=password'
+</code>
+</pre>
+
+Replace the number '1234' in the above example with your account ID, and replace the username and password with your authentication information.
+
+The above will return something like this:
+
+<pre>
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<venues type="array">
+  <venue>
+    <address nil="true"></address>
+    <city>Las Vegas</city>
+    <country>USA</country>
+    <created-at type="datetime">2010-07-13T12:14:18-04:00</created-at>
+    <description nil="true"></description>
+    <email>guestlist54@lv.mgmgrand.com</email>
+    <guestlist-close-time type="datetime">2000-01-01T21:00:00-05:00</guestlist-close-time>
+    <guestlists-sort nil="true"></guestlists-sort>
+    <home-URL>http://www.mgmgrand.com/</home-URL>
+    <id type="integer">35</id>
+    <latitude>36.146532</latitude>
+    <longitude>-115.193981</longitude>
+    <myspace-URL nil="true"></myspace-URL>
+    <payment-gateway>PlugNPay</payment-gateway>
+    <phone>702-425-9399</phone>
+    <reservations-sort nil="true"></reservations-sort>
+    <reservations-summary-time type="datetime">2000-01-01T21:00:00-05:00</reservations-summary-time>
+    <social-status nil="true"></social-status>
+    <sort-name>first</sort-name>
+    <state>NV</state>
+    <tickets-sort nil="true"></tickets-sort>
+    <time-zone>US/Pacific</time-zone>
+    <title>Studio 54</title>
+    <updated-at type="datetime">2010-07-13T12:14:18-04:00</updated-at>
+    <zip>81901</zip>
+  </venue>
+  <venue>
+    <address>3799 Las Vegas Boulevard South</address>
+    <city>Las Vegas</city>
+    <country>USA</country>
+    <created-at type="datetime">2010-07-13T12:14:18-04:00</created-at>
+    <description nil="true"></description>
+    <email>guestlisttabu@lv.mgmgrand.com</email>
+    <guestlist-close-time type="datetime">2000-01-01T21:00:00-05:00</guestlist-close-time>
+    <guestlists-sort nil="true"></guestlists-sort>
+    <home-URL>http://www.mgmgrand.com/</home-URL>
+    <id type="integer">1</id>
+    <latitude>36.101688</latitude>
+    <longitude>-115.172111</longitude>
+    <myspace-URL nil="true"></myspace-URL>
+    <payment-gateway>PlugNPay</payment-gateway>
+    <phone>702-891-7983</phone>
+    <reservations-sort nil="true"></reservations-sort>
+    <reservations-summary-time type="datetime">2000-01-01T21:00:00-05:00</reservations-summary-time>
+    <social-status nil="true"></social-status>
+    <sort-name>first</sort-name>
+    <state>NV</state>
+    <tickets-sort nil="true"></tickets-sort>
+    <time-zone>US/Pacific</time-zone>
+    <title>Tab&#250; Ultra Lounge</title>
+    <updated-at type="datetime">2010-07-13T12:14:18-04:00</updated-at>
+    <zip>89109</zip>
+  </venue>
+  <venue>
+    <address>3799 Las Vegas Boulevard South</address>
+    <city>Las Vegas</city>
+    <country>USA</country>
+    <created-at type="datetime">2010-07-13T12:14:18-04:00</created-at>
+    <description nil="true"></description>
+    <email>reservations@angelpromo.com</email>
+    <guestlist-close-time type="datetime">2000-01-01T10:00:00-05:00</guestlist-close-time>
+    <guestlists-sort nil="true"></guestlists-sort>
+    <home-URL>http://www.wetrepublic.com/</home-URL>
+    <id type="integer">36</id>
+    <latitude>36.101198</latitude>
+    <longitude>-115.172424</longitude>
+    <myspace-URL nil="true"></myspace-URL>
+    <payment-gateway>PlugNPay</payment-gateway>
+    <phone>702.891.1111</phone>
+    <reservations-sort nil="true"></reservations-sort>
+    <reservations-summary-time type="datetime">2000-01-01T10:00:00-05:00</reservations-summary-time>
+    <social-status nil="true"></social-status>
+    <sort-name>first</sort-name>
+    <state>NV</state>
+    <tickets-sort nil="true"></tickets-sort>
+    <time-zone>US/Pacific</time-zone>
+    <title>Wet Republic</title>
+    <updated-at type="datetime">2010-07-13T12:14:18-04:00</updated-at>
+    <zip>89109</zip>
+  </venue>
+</venues>
+</code>
+</pre>
+
+You can also request the same information with JSON formatting instead of XML, like this:
+
+<pre>
+<code>
+curl 'http://venuedriver.com/api/accounts/1234/venues.json?username=venuesite&password=password'
+</code>
+</pre>
+
+The above will return the same information, formatted with JSON:
+
+<pre>
+<code>
+[{"city": "Las Vegas", "address": null, "zip": "81901", "myspace_URL": null, "latitude": "36.146532", "created_at": "2010/07/13 12:14:18 -0400", "title": "Studio 54", "reservations_sort": null, "country": "USA", "updated_at": "2010/07/13 12:14:18 -0400", "sort_name": "first", "payment_gateway": "PlugNPay", "guestlists_sort": null, "id": 35, "phone": "702-425-9399", "guestlist_close_time": "2000/01/01 21:00:00 -0500", "time_zone": "US/Pacific", "social_status": null, "reservations_summary_time": "2000/01/01 21:00:00 -0500", "longitude": "-115.193981", "home_URL": "http://www.mgmgrand.com/", "description": null, "tickets_sort": null, "state": "NV", "email": "guestlist54@lv.mgmgrand.com"}, {"city": "Las Vegas", "address": "3799 Las Vegas Boulevard South", "zip": "89109", "myspace_URL": null, "latitude": "36.101688", "created_at": "2010/07/13 12:14:18 -0400", "title": "Tab\u00fa Ultra Lounge", "reservations_sort": null, "country": "USA", "updated_at": "2010/07/13 12:14:18 -0400", "sort_name": "first", "payment_gateway": "PlugNPay", "guestlists_sort": null, "id": 1, "phone": "702-891-7983", "guestlist_close_time": "2000/01/01 21:00:00 -0500", "time_zone": "US/Pacific", "social_status": null, "reservations_summary_time": "2000/01/01 21:00:00 -0500", "longitude": "-115.172111", "home_URL": "http://www.mgmgrand.com/", "description": null, "tickets_sort": null, "state": "NV", "email": "guestlisttabu@lv.mgmgrand.com"}, {"city": "Las Vegas", "address": "3799 Las Vegas Boulevard South", "zip": "89109", "myspace_URL": null, "latitude": "36.101198", "created_at": "2010/07/13 12:14:18 -0400", "title": "Wet Republic", "reservations_sort": null, "country": "USA", "updated_at": "2010/07/13 12:14:18 -0400", "sort_name": "first", "payment_gateway": "PlugNPay", "guestlists_sort": null, "id": 36, "phone": "702.891.1111", "guestlist_close_time": "2000/01/01 10:00:00 -0500", "time_zone": "US/Pacific", "social_status": null, "reservations_summary_time": "2000/01/01 10:00:00 -0500", "longitude": "-115.172424", "home_URL": "http://www.wetrepublic.com/", "description": null, "tickets_sort": null, "state": "NV", "email": "reservations@angelpromo.com"}]
+</code>
+</pre>
+
+h3. Get an event list for a venue
+
+You can get an event list for a venue record in Venue Driver if you have a valid login and also the venue ID.  The venue ID is numeric, and you can obtain it through the above venue index method, or you can obtain the ID for your venue from Venue Driver support.  The API's /venues resource exposes a nested events resource.  So if you want the events for the venue with ID 1234, then you can get that with:
+
+<pre>
+<code>
+curl 'http://venuedriver.com/api/venues/1234/events.xml?username=venuesite&password=password'
+</code>
+</pre>
+  
+The above will return something like this:
+
+<pre>
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<events type="array">
+  <event>
+    <VIP-URL nil="true"></VIP-URL>
+    <active type="boolean" nil="true"></active>
+    <ages nil="true"></ages>
+    <close type="datetime">2000-01-01T08:15:00-05:00</close>
+    <closed-message nil="true"></closed-message>
+    <cover nil="true"></cover>
+    <created-at type="datetime">2010-02-09T20:48:10-05:00</created-at>
+    <date type="date">2010-03-12</date>
+    <description nil="true"></description>
+    <guestlist-URL nil="true"></guestlist-URL>
+    <guestlist-conditions nil="true"></guestlist-conditions>
+    <home-URL nil="true"></home-URL>
+    <id type="integer">5635</id>
+    <myspace-URL nil="true"></myspace-URL>
+    <open type="datetime">2000-01-01T22:30:00-05:00</open>
+    <tickets-URL nil="true"></tickets-URL>
+    <tickets-sold-count type="integer">0</tickets-sold-count>
+    <time type="datetime" nil="true"></time>
+    <title>Friday Event</title>
+    <updated-at type="datetime">2010-03-01T14:42:29-05:00</updated-at>
+  </event>
+  <event>
+    <VIP-URL nil="true"></VIP-URL>
+    <active type="boolean" nil="true"></active>
+    <ages nil="true"></ages>
+    <close type="datetime">2000-01-01T08:15:00-05:00</close>
+    <closed-message nil="true"></closed-message>
+    <cover nil="true"></cover>
+    <created-at type="datetime">2010-02-09T20:48:35-05:00</created-at>
+    <date type="date">2010-03-13</date>
+    <description nil="true"></description>
+    <guestlist-URL nil="true"></guestlist-URL>
+    <guestlist-conditions nil="true"></guestlist-conditions>
+    <home-URL nil="true"></home-URL>
+    <id type="integer">5636</id>
+    <myspace-URL nil="true"></myspace-URL>
+    <open type="datetime">2000-01-01T22:00:00-05:00</open>
+    <tickets-URL nil="true"></tickets-URL>
+    <tickets-sold-count type="integer">0</tickets-sold-count>
+    <time type="datetime" nil="true"></time>
+    <title>Saturday Event</title>
+    <updated-at type="datetime">2010-03-01T14:42:29-05:00</updated-at>
+  </event>
+</events>
+</code>
+</pre>
+
+This API method can also return data formatted with JSON instead of XML, just like the venue index
+method above.  Simply change the file extension in the request URL from ".xml" to ".json":
+
+<pre>
+<code>
+curl 'http://venuedriver.com/api/venues/1234/events.json?username=venuesite&password=password'
+</code>
+</pre>
+
+h3. Get flyer images for an event
+
+Flyers are a nested resource under the event resource.  They are not included in the event list returned by /venues/:venue_id/events.xml, but you can obtain them through the flyer resource:
+
+<pre>
+<code>
+  curl 'http://venuedriver.com/api/venues/1234/events/5678/flyers.xml?username=venuesite&password=password'
+</code>
+</pre>
+
+The above will return the list of flyers for the event 5678:
+
+<pre>
+<code>
+  <?xml version="1.0" encoding="UTF-8"?>
+  <flyers type="array">
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>IMG_3020.jpg</asset-file-name>
+      <asset-file-size type="integer">473217</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T17:00:00-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">8</id>
+      <asset-url>/assets/8/original/IMG_3020.jpg</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>IMG_2970.jpg</asset-file-name>
+      <asset-file-size type="integer">603736</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T17:00:56-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">9</id>
+      <asset-url>/assets/9/original/IMG_2970.jpg</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>Safari-screenshot-236.jpg</asset-file-name>
+      <asset-file-size type="integer">58457</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T18:02:25-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">10</id>
+      <asset-url>/assets/10/original/Safari-screenshot-236.jpg</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>application/pdf</asset-content-type>
+      <asset-file-name>20091206-160523.pdf</asset-file-name>
+      <asset-file-size type="integer">3302460</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T18:38:33-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">12</id>
+      <asset-url>/assets/12/original/20091206-160523.pdf</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>02_events.jpg</asset-file-name>
+      <asset-file-size type="integer">1378489</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T18:39:34-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">13</id>
+      <asset-url>/assets/13/original/02_events.jpg</asset-url>
+    </flyer>
+  </flyers>
+</code>
+</pre>
+
+You can also use the show action for the event resource.  For example, this will return the list of flyer images for the event 5678 at the venue 1234:
+
+<pre>
+<code>
+  curl 'http://venuedriver.com/api/venues/1234/events/5678.xml?username=venuesite&password=password'
+</code>
+</pre>
+
+The response includes the attributes for the event as in the above, but it also includes the nested flyer records:
+
+<pre>
+<code>
+<?xml version="1.0" encoding="UTF-8"?>
+<event>
+  <VIP-URL nil="true"></VIP-URL>
+  <active type="boolean" nil="true"></active>
+  <ages nil="true"></ages>
+  <close type="datetime">2000-01-01T09:00:00-05:00</close>
+  <closed-message nil="true"></closed-message>
+  <cover nil="true"></cover>
+  <created-at type="datetime">2010-01-02T01:01:46-05:00</created-at>
+  <date type="date">2010-03-02</date>
+  <description nil="true"></description>
+  <guestlist-URL nil="true"></guestlist-URL>
+  <guestlist-conditions nil="true"></guestlist-conditions>
+  <home-URL nil="true"></home-URL>
+  <id type="integer">5313</id>
+  <myspace-URL nil="true"></myspace-URL>
+  <open type="datetime">2000-01-01T22:30:00-05:00</open>
+  <tickets-URL nil="true"></tickets-URL>
+  <time type="datetime" nil="true"></time>
+  <title>Tuesday Night</title>
+  <updated-at type="datetime">2010-03-01T14:42:14-05:00</updated-at>
+  <wiki-name nil="true"></wiki-name>
+  <flyers type="array">
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>IMG_3020.jpg</asset-file-name>
+      <asset-file-size type="integer">473217</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T17:00:00-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">8</id>
+      <asset-url>/assets/8/original/IMG_3020.jpg</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>IMG_2970.jpg</asset-file-name>
+      <asset-file-size type="integer">603736</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T17:00:56-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">9</id>
+      <asset-url>/assets/9/original/IMG_2970.jpg</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>Safari-screenshot-236.jpg</asset-file-name>
+      <asset-file-size type="integer">58457</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T18:02:25-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">10</id>
+      <asset-url>/assets/10/original/Safari-screenshot-236.jpg</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>application/pdf</asset-content-type>
+      <asset-file-name>20091206-160523.pdf</asset-file-name>
+      <asset-file-size type="integer">3302460</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T18:38:33-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">12</id>
+      <asset-url>/assets/12/original/20091206-160523.pdf</asset-url>
+    </flyer>
+    <flyer>
+      <asset-content-type>image/jpeg</asset-content-type>
+      <asset-file-name>02_events.jpg</asset-file-name>
+      <asset-file-size type="integer">1378489</asset-file-size>
+      <asset-updated-at type="datetime">2010-03-02T18:39:34-05:00</asset-updated-at>
+      <event-id type="integer">5313</event-id>
+      <id type="integer">13</id>
+      <asset-url>/assets/13/original/02_events.jpg</asset-url>
+    </flyer>
+  </flyers>
+</event>
+</code>
+</pre>
+
+h3. Create a reservation
+
+Create a reservation in Venue Driver by posting a reservation record with the proper event_id to http://venuedriver.com/api/reservations, as in this example:
+
+<pre>
+<code>
+  curl -i -H "Accept: application/json" -X POST -d "event_id=1840479691&reservation[first]=test&reservation[last]=test&reservation[phone]=5555555&reservation[email]=test@test.com" "http://venuedriver.com/api/reservations?username=venuesite&password=password"
+</code>
+</pre>
+
+When successful, the above query will return a JSON representation of the new reservation:
+
+<pre>
+<code>
+HTTP/1.1 200 OK
+Connection: close
+Date: Tue, 25 May 2010 18:25:22 GMT
+Set-Cookie: _saintpeter_session_id=0792619031d7ae234dcf2400a5fb59e3; path=/
+Status: 200 OK
+ETag: "bad52e9d03f4b589acee6aeb5ec7962e"
+P3P: CP="NOI DSP COR NID ADMa OPTa OUR NOR"
+X-Runtime: 0.65959
+Content-Type: application/json; charset=utf-8
+Content-Length: 892
+Server: Mongrel 1.1.5
+Cache-Control: private, max-age=0, must-revalidate
+
+{"city":null,"checkin_time":null,"checked_in":null,"address1":null,"zip":null,"created_at":"2010/05/25 14:25:23 -0400","confirmation":null,"address2":null,"staff_id":null,"event_id":1840479691,"customer_notes":null,"country":null,"company_name":null,"updated_at":"2010/05/25 14:25:23 -0400","table_id":null,"notes":null,"gratuity":null,"table_number":null,"signup_notes":null,"minimum_currency":null,"last":"test","area_id":null,"actual_paid_bottles":null,"account_id":null,"total_spend":null,"id":2132434459,"approved":null,"actual_comp_bottles":null,"phone":"5555555","guests":null,"first":"test","walkup":false,"total_returns":null,"phone_alternative":null,"paid_bottles":null,"event_notes":null,"date_of_birth":null,"seated_table_id":null,"phone_hash":"5555555","phone_carrier":null,"comp_bottles":null,"state":null,"email":"test@test.com","host_name":"[not assigned]","bottles_both":"0"}
+</code>
+</pre>
+
+h2. Convenience methods
+
+h3. Event select tag
+
+Venue Driver provides an API method that will return HTML code for an event select box, to be inserted
+directly into a web page.  For example, to get a drop-down select box for all upcoming events at the venue with Venue Driver ID code 1234, you might call a URL like this:
+
+<pre>
+<code>
+http://venuedriver.com/api/venues/1234/events/select_tag.html?username=venuesite&password=password
+</code>
+</pre>
+
+You can test from the command line using the cURL utility:
+
+<pre>
+<code>
+curl 'http://venuedriver.com/api/venues/129582/events/select_tag.html?username=venuesite&password=password'
+</code>
+</pre>
+
+It will return something like this:
+
+<pre>
+<code>
+<select id="event" name="event"><option value="3768">Cabaret of Dr. Calagari - Apr 16</option>
+<option value="3769">Latin Night and Tequila Party - Apr 17</option>
+<option value="3859">Visionshock - International District Spring Roll Party - Apr 24</option>
+<option value="3860">Sounders Latin Preparty - Apr 25</option>
+<option value="3832">Glamour - May 01</option></select>
+</code>
+</pre>
+
+Using that resource URL is pretty simple.  In Ruby for example it looks like this:
+
+<pre>
+<code>
+url = "http://venuedriver/api/venues/129582/events/select_tag.html?username=venuesite&password=password"
+events_html = Net::HTTP.get_response(URI.parse(url))
+</code>
+</pre>
+
+Then you can just drop that HTML snippet into your form with @<%= events_html %>@ or the equivalent in PHP or whatever.  That gives you a simple way to build a form that can request guest list signup for any upcoming event.
+
+When somebody submits the form, creating the guest list entry is similarly simple.  It also involves a simple HTTP query to an API URL.  Are you using PHP?  I can send you an example snippet for doing the post if so.
+
+h2. Examples
+
+h3. Ruby on Rails
+
+"Promoter":http://github.com/angelmg/promoter is a Rails plugin for accessing the Venue Driver API.  Promoter is a Rails Engine plugin that adds controllers and views to your web site for providing reservation, guest list and mailing list signup forms.  It uses Active Resource to access Venue Driver.  For example, here is how to get a list of events and a list of flyers for an event from the console:
+
+<pre>
+<code>
+  >> @events = Event.find(:all, :params => {:venue_id => 1})
+  => [#<Event:0x1031b08b0 @attributes={"open"=>Sun Jan 02 03:30:00 UTC 2000, "myspace_URL"=>nil, ...
+  >> @events.size 
+  => 38
+  >> puts @events.first.to_yaml
+  --- !ruby/object:Event 
+  attributes: 
+    open: 2000-01-02 03:30:00 Z
+    myspace_URL: 
+    created_at: 2009-12-18 03:48:14 Z
+    title: Sundays at Tabu
+    close: 2000-01-01 13:30:00 Z
+    closed_message: 
+    ages: 
+    cover: 
+    guestlist_conditions: 
+    updated_at: 2010-03-01 19:42:22 Z
+    time: 
+    wiki_name: 
+    id: 5237
+    date: 2010-02-28
+    VIP_URL: 
+    tickets_URL: 
+    home_URL: 
+    description: 
+    active: 
+    flyers: []
+
+    tickets_sold_count: 0
+    guestlist_URL: 
+  prefix_options: 
+    :venue_id: 1
+  => nil
+  >> @flyers = Flyer.find(:all, :params => {:venue_id => 1, :event_id => 5313})
+  => [#<Flyer:0x102ee6940 @attributes={"asset_file_name"=>"IMG_3020.jpg", "asset_url"=>"/assets/8/original/IMG_3020.jpg" ...
+  >> @flyers.size
+  => 5
+  >> puts @flyers.first.to_yaml
+  --- !ruby/object:Flyer 
+  attributes: 
+    asset_file_name: IMG_3020.jpg
+    asset_url: /assets/8/original/IMG_3020.jpg
+    asset_file_size: 473217
+    asset_content_type: image/jpeg
+    id: 8
+    parent_id: 
+    asset_updated_at: 2010-03-02 22:00:00 Z
+  prefix_options: 
+    :venue_id: 1
+    :event_id: 5313
+  => nil
+  >> 
+</code>
+</pre>
+
+h3. PHP
+
+These examples show how to build reservation and guest list forms with PHP.  These examples use a "PHP library":http://code.google.com/p/phpactiveresource/ for accessing our REST resources.
+
+Here are the example files:
+
+"Example PHP reservation form":http://github.com/endymion/venue-driver-api-documentation/raw/master/examples/php/ReservationForm.php
+"Example PHP guest list form":http://github.com/endymion/venue-driver-api-documentation/raw/master/examples/php/GuestListForm.php
+"Venue Driver API configuration file":http://github.com/endymion/venue-driver-api-documentation/raw/master/examples/php/VenueDriver.php
+"ActiveResource REST API for PHP":http://github.com/endymion/venue-driver-api-documentation/raw/master/examples/php/ActiveResource.php
+
+h3. JavaScript
+
+You might want to add an on-change handler to the select boxes that Venue Driver's convenience methods return.  Here is an example of how to do that unobtrusively using jQuery:
+
+"Unobtrusive JavaScript example":http://github.com/endymion/venue-driver-api-documentation/raw/master/examples/javascript/unobtrustive-onchange-example.html
